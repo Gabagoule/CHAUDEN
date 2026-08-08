@@ -159,8 +159,8 @@ input[type=range]::-moz-range-thumb{
 .ticks span{width:24px; text-align:center; text-shadow:0 2px 0 rgba(0,0,0,.5)}
 .ticks span.on{color:#fff; font-weight:700}
 
-/* ---------- BOUTON GO ---------- */
-.gowrap{margin-top:22px; display:flex; gap:16px; align-items:center}
+/* ---------- BOUTONS ---------- */
+.gowrap{margin-top:22px; display:flex; flex-direction:column; gap:14px; align-items:center}
 button{font-family:inherit; cursor:pointer}
 .go{
   font-size:30px; font-weight:700; letter-spacing:3px; color:#fff;
@@ -175,6 +175,23 @@ button{font-family:inherit; cursor:pointer}
 @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
 .go:active{transform:translateY(6px); box-shadow:0 2px 0 #6e1218, 0 5px 0 rgba(0,0,0,.35)}
 .go:disabled{opacity:.55; cursor:default; animation:none}
+.btn2{
+  font-size:19px; font-weight:700; letter-spacing:2px; color:#fff;
+  background:linear-gradient(180deg,#3562b8,#22407e);
+  border:4px solid var(--outline); border-radius:12px;
+  padding:8px 26px 10px;
+  box-shadow:0 6px 0 #142650, 0 9px 0 rgba(0,0,0,.3);
+  text-shadow:0 2px 0 rgba(0,0,0,.4);
+  transition:transform .08s, box-shadow .08s;
+}
+.btn2:active{transform:translateY(4px); box-shadow:0 2px 0 #142650, 0 4px 0 rgba(0,0,0,.3)}
+.btn2.gold{
+  background:linear-gradient(180deg,var(--gold),#c98d1d);
+  box-shadow:0 6px 0 #7d5a10, 0 9px 0 rgba(0,0,0,.3);
+}
+.btn2.gold:active{box-shadow:0 2px 0 #7d5a10, 0 4px 0 rgba(0,0,0,.3)}
+.btn2:disabled{opacity:.55; cursor:default}
+.hidden{display:none !important}
 
 /* ---------- ZONE DE JEU ---------- */
 .arena{width:100%; margin-top:30px; min-height:340px; display:flex; flex-direction:column; align-items:center}
@@ -317,6 +334,69 @@ button{font-family:inherit; cursor:pointer}
 .joker-card p{font-size:22px; line-height:1.35}
 .jhint{font-size:13px; color:#b7a8d9; letter-spacing:1px}
 
+/* ---------- FORMULAIRE DE PROPOSITION ---------- */
+.propose{
+  width:min(620px,100%);
+  background:#1b2547;
+  border:4px solid var(--outline); border-radius:14px;
+  box-shadow:0 7px 0 rgba(0,0,0,.42), inset 0 2px 0 rgba(255,255,255,.08);
+  padding:18px 22px 22px;
+  animation:deal .4s cubic-bezier(.2,1.4,.4,1) both;
+}
+.propose h3{
+  font-size:26px; letter-spacing:2px; color:var(--gold);
+  text-shadow:0 3px 0 rgba(0,0,0,.5); margin-bottom:14px; text-align:center;
+}
+.field{margin-bottom:14px}
+.field label{
+  display:block; font-size:17px; letter-spacing:1px; color:#b8c5e8;
+  margin-bottom:5px; text-shadow:0 2px 0 rgba(0,0,0,.5);
+}
+.field label .req{color:var(--red)}
+.field input[type=text], .field textarea{
+  width:100%; font-family:inherit; font-size:20px; color:var(--ink);
+  background:linear-gradient(180deg,#fffaf0,var(--cream));
+  border:3px solid var(--outline); border-radius:10px;
+  padding:8px 12px; outline:none;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.15);
+}
+.field input[type=text]:focus, .field textarea:focus{
+  border-color:var(--gold);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.15), 0 0 0 3px rgba(245,185,59,.35);
+}
+.check{
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+  margin:16px 0 6px; user-select:none;
+}
+.check input{display:none}
+.check .box{
+  width:26px; height:26px; flex:0 0 auto; border-radius:7px;
+  background:linear-gradient(180deg,#fffaf0,var(--cream));
+  border:3px solid var(--outline);
+  box-shadow:0 3px 0 rgba(0,0,0,.35);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; font-weight:700; color:transparent;
+  transition:background .12s, color .12s;
+}
+.check input:checked + .box{background:linear-gradient(180deg,var(--gold),#d99b22); color:var(--ink)}
+.check .ctext{font-size:19px; letter-spacing:1px; color:#e6ecfc; text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.subpanel{
+  border:3px dashed rgba(255,255,255,.22); border-radius:11px;
+  padding:12px 14px 4px; margin-bottom:6px;
+  background:rgba(0,0,0,.16);
+}
+.mini-ticks{display:flex; justify-content:space-between; padding:4px 6px 0; font-size:13px; color:#8f9dc9}
+.mini-ticks span{width:22px; text-align:center}
+.mini-ticks span.on{color:#fff; font-weight:700}
+.formrow{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px}
+.form-actions{display:flex; gap:14px; justify-content:center; margin-top:18px; flex-wrap:wrap}
+.form-msg{
+  margin-top:12px; text-align:center; font-size:19px; letter-spacing:1px;
+  text-shadow:0 2px 0 rgba(0,0,0,.5); min-height:24px;
+}
+.form-msg.ok{color:#7fe09a}
+.form-msg.err{color:#ff9b9b}
+
 /* couleurs de niveau */
 .c1{background:#67b46f}.c2{background:#3fae6a}.c3{background:var(--gold)}.c4{background:#f07f2e}.c5{background:var(--red)}
 
@@ -357,14 +437,20 @@ footer{position:fixed; bottom:8px; z-index:2; font-size:12px; color:#7d8bb8; let
 
   <div class="gowrap">
     <button class="go" id="go">GO&nbsp;!</button>
+    <button class="btn2 gold" id="proposeBtn">💡 PROPOSER UN THÈME</button>
+    <button class="btn2 hidden" id="homeBtn">⌂ RETOUR À L'ACCUEIL</button>
   </div>
 
   <section class="arena" id="arena"></section>
 </main>
 
-<footer>CHAUDEN v1.0 — inspiré de la chaudenliste</footer>
+<footer>CHAUDEN v1.1 — inspiré de la chaudenliste</footer>
 
 <script>
+/* ================== CONFIG ================== */
+
+const PROPOSE_ENDPOINT = "https://chauden-api.pchassery.workers.dev";
+
 /* ================== DATA ================== */
 const STAKES = [
   {name:'TRANQUILLE', cls:'c1'},
@@ -600,12 +686,12 @@ const TOPICS = {
   ]},
   {t:"Le racisme anti-blanc",
   q1:"Ca existe ?",
-  q2:"« Le racisme antiblanc n’existe pas » c’est dire : « Les Blancs ne bénéficieront pas des lois réprimant le racisme » ?",
+  q2:"« Le racisme antiblanc n'existe pas » c'est dire : « Les Blancs ne bénéficieront pas des lois réprimant le racisme » ?",
   q3:"Est ce que le terme racisme est souvent mal employé ?",
   j:[
    {k:'fact', x:"Les sciences humaines et sociales ne reconnaissent pas le racisme anti-blanc"},
    {k:'malaise', x:"Il n'y a pas de discrimination à l'embauche pour les blancs"},
-   {k:'unpop', x:" A deux reprises les tribunaux ont retenu la circonstance aggravante de racisme dans le cas d’agressions accompagnées d’injures visant des personnes en tant que blanches"},
+   {k:'unpop', x:" A deux reprises les tribunaux ont retenu la circonstance aggravante de racisme dans le cas d'agressions accompagnées d'injures visant des personnes en tant que blanches"},
   ]},
  {t:"Liberté d'expression",
   q1:"Y a-t-il des opinions qui ne devraient pas pouvoir s'exprimer ?",
@@ -621,8 +707,21 @@ const TOPICS = {
 
 /* ================== ETAT ================== */
 const $ = s => document.querySelector(s);
-const lvlInput = $('#lvl'), stakeLbl = $('#stakeLbl'), arena = $('#arena'), goBtn = $('#go');
+const lvlInput = $('#lvl'), stakeLbl = $('#stakeLbl'), arena = $('#arena');
+const goBtn = $('#go'), proposeBtn = $('#proposeBtn'), homeBtn = $('#homeBtn');
 let lastTopic = null, currentTopic = null, jokerPool = [], busy = false;
+
+/* ================== NAVIGATION ================== */
+function goHome(){
+  arena.innerHTML = '';
+  proposeBtn.classList.remove('hidden');
+  homeBtn.classList.add('hidden');
+}
+function leaveHome(){
+  proposeBtn.classList.add('hidden');
+  homeBtn.classList.remove('hidden');
+}
+homeBtn.addEventListener('click', goHome);
 
 /* ================== SLIDER ================== */
 function refreshStake(){
@@ -644,6 +743,7 @@ const SEARCH_MSGS = [
 goBtn.addEventListener('click', ()=>{
   if(busy) return;
   busy = true; goBtn.disabled = true;
+  leaveHome();
   const lvl = +lvlInput.value;
 
   arena.innerHTML = `
@@ -734,6 +834,135 @@ function playJoker(){
   card.className = 'joker-card';
   card.innerHTML = `<span class="jtag" style="background:${meta.color}">${meta.label}</span><p>${esc(j.x)}</p>`;
   zone.appendChild(card);
+}
+
+/* ================== FORMULAIRE DE PROPOSITION ================== */
+proposeBtn.addEventListener('click', openProposeForm);
+
+function openProposeForm(){
+  leaveHome();
+  arena.innerHTML = `
+  <div class="propose">
+    <h3>💡 PROPOSER UN THÈME</h3>
+
+    <div class="formrow">
+      <span class="field label" style="font-size:17px; color:#b8c5e8; letter-spacing:1px">NIVEAU DE DANGER <span class="req">*</span></span>
+      <span class="stake c1" id="pStake">TRANQUILLE</span>
+    </div>
+    <input type="range" id="pLvl" min="1" max="5" step="1" value="1">
+    <div class="mini-ticks" id="pTicks">
+      <span class="on">1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+
+    <div class="field" style="margin-top:14px">
+      <label>NOM DU THÈME <span class="req">*</span></label>
+      <input type="text" id="pTheme" maxlength="80" placeholder="Ex : Les gens qui parlent au cinéma">
+    </div>
+
+    <label class="check">
+      <input type="checkbox" id="ckQ">
+      <span class="box">✔</span>
+      <span class="ctext">Proposer des questions</span>
+    </label>
+    <div class="subpanel hidden" id="panelQ">
+      <div class="field">
+        <label>QUESTION 1 — réponse OUI / NON ou VRAI / FAUX</label>
+        <input type="text" id="pQ1" maxlength="200" placeholder="La question qui clive…">
+      </div>
+      <div class="field">
+        <label>QUESTION OUVERTE 2</label>
+        <input type="text" id="pQ2" maxlength="200" placeholder="Pour creuser…">
+      </div>
+      <div class="field">
+        <label>QUESTION OUVERTE 3</label>
+        <input type="text" id="pQ3" maxlength="200" placeholder="Pour finir en beauté…">
+      </div>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" id="ckJ">
+      <span class="box">✔</span>
+      <span class="ctext">Proposer des jokers</span>
+    </label>
+    <div class="subpanel hidden" id="panelJ">
+      <div class="field">
+        <label style="color:#f5b93b">🃏 FUN FACT</label>
+        <input type="text" id="pJfact" maxlength="300" placeholder="Une anecdote qui relance…">
+      </div>
+      <div class="field">
+        <label style="color:#f5484f">🃏 TRUC DÉRANGEANT</label>
+        <input type="text" id="pJmal" maxlength="300" placeholder="Un truc qui met mal à l'aise…">
+      </div>
+      <div class="field">
+        <label style="color:#2fa3f3">🃏 UNPOPULAR OPINION</label>
+        <input type="text" id="pJunpop" maxlength="300" placeholder="Une opinion que personne n'ose dire…">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn2 gold" id="pSend">📨 ENVOYER</button>
+    </div>
+    <div class="form-msg" id="pMsg"></div>
+  </div>`;
+
+  /* mini-slider du formulaire */
+  const pLvl = $('#pLvl'), pStake = $('#pStake'), pTicks = $('#pTicks');
+  pLvl.addEventListener('input', ()=>{
+    const v = +pLvl.value, s = STAKES[v-1];
+    pStake.textContent = s.name;
+    pStake.className = 'stake ' + s.cls;
+    [...pTicks.children].forEach((el,i)=>el.classList.toggle('on', i === v-1));
+  });
+
+  /* panneaux repliables */
+  $('#ckQ').addEventListener('change', e => $('#panelQ').classList.toggle('hidden', !e.target.checked));
+  $('#ckJ').addEventListener('change', e => $('#panelJ').classList.toggle('hidden', !e.target.checked));
+
+  $('#pSend').addEventListener('click', submitProposal);
+}
+
+async function submitProposal(){
+  const msg = $('#pMsg');
+  const theme = $('#pTheme').value.trim();
+
+  if(!theme){
+    msg.textContent = "Il faut au moins un nom de thème !";
+    msg.className = 'form-msg err';
+    $('#pTheme').focus();
+    return;
+  }
+
+  const payload = {
+    lvl: +$('#pLvl').value,
+    theme: theme,
+    q1: $('#ckQ').checked ? $('#pQ1').value.trim() : '',
+    q2: $('#ckQ').checked ? $('#pQ2').value.trim() : '',
+    q3: $('#ckQ').checked ? $('#pQ3').value.trim() : '',
+    jfact:  $('#ckJ').checked ? $('#pJfact').value.trim()  : '',
+    jmal:   $('#ckJ').checked ? $('#pJmal').value.trim()   : '',
+    junpop: $('#ckJ').checked ? $('#pJunpop').value.trim() : '',
+  };
+
+  const btn = $('#pSend');
+  btn.disabled = true;
+  msg.textContent = "Envoi en cours…";
+  msg.className = 'form-msg';
+
+  try{
+    const r = await fetch(PROPOSE_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    msg.textContent = "✅ Merci ! Ta proposition est bien envoyée.";
+    msg.className = 'form-msg ok';
+    setTimeout(goHome, 2000);
+  }catch(err){
+    msg.textContent = "❌ Échec de l'envoi. Réessaie plus tard.";
+    msg.className = 'form-msg err';
+    btn.disabled = false;
+  }
 }
 </script>
 </body>
