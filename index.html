@@ -469,7 +469,7 @@ function track(ev, props){ try{ posthog.capture(ev, props); }catch(e){} }
 
 <main>
   <h1>CHAUDEN</h1>
-  <div class="tagline">Règle le curseur &bull; lance le débat &bull; perds tes amis</div>
+  <div class="tagline">Règle le curseur &bull; lance le débat &bull; tri tes amis</div>
 
   <section class="panel">
     <div class="panel-head">
@@ -695,6 +695,8 @@ const TOPICS = {
    {k:'malaise', x:"Une partie des demandes de fin de vie n'est pas motivée par la douleur physique, mais par le sentiment d'être un fardeau pour les proches."},
    {k:'unpop', x:"On accorde à nos animaux une fin de vie plus douce qu'à nos propres parents."},
   ]},
+
+  {"lvl":4,"theme":"Guillaume Pley : le \"journalisme neutre bienveillant\"","q1":"Le journalisme peut il être réellement neutre?","q2":"D'un point de vu moral, peut on interviewer n'importe qui?","q3":"À vouloir être apartisant dans le journalisme, ne fait on pas le lit du pire....?","jfact":"Pley et plaie est homophone","jmal":"","junpop":"","date":"2026-08-08T21:25:45.949Z"}
 ],
 5:[
  {t:"Israël – Palestine",
@@ -952,6 +954,11 @@ function openProposeForm(){
       <input type="text" id="pTheme" maxlength="80" placeholder="Ex : Les mecs qui s'habillent style Peaky Blinders">
     </div>
 
+    <div class="field">
+      <label>TON PRÉNOM / PSEUDO <span style="color:#8f9dc9">(facultatif)</span></label>
+      <input type="text" id="pAuthor" maxlength="30" placeholder="Ex : Zorg">
+    </div>
+
     <label class="check">
       <input type="checkbox" id="ckQ">
       <span class="box">✔</span>
@@ -1028,6 +1035,7 @@ async function submitProposal(){
   const payload = {
     lvl: +$('#pLvl').value,
     theme: theme,
+    author: $('#pAuthor').value.trim(),
     q1: $('#ckQ').checked ? $('#pQ1').value.trim() : '',
     q2: $('#ckQ').checked ? $('#pQ2').value.trim() : '',
     q3: $('#ckQ').checked ? $('#pQ3').value.trim() : '',
