@@ -293,6 +293,40 @@ button{font-family:inherit; cursor:pointer}
 .q .tag.open{background:#8a7c68}
 .q p{font-size:28px; line-height:1.3; font-weight:500}
 
+/* ---------- VOTE Q1 ---------- */
+.voterow{display:flex; gap:12px; margin-top:12px; align-items:center; flex-wrap:wrap}
+.votebtn{
+  font-family:inherit; font-size:22px; font-weight:700; letter-spacing:2px; color:#fff;
+  border:3px solid var(--outline); border-radius:10px; padding:6px 26px 8px;
+  box-shadow:0 5px 0 rgba(0,0,0,.35); text-shadow:0 2px 0 rgba(0,0,0,.4);
+  cursor:pointer; transition:transform .08s, box-shadow .08s;
+}
+.votebtn:active{transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.votebtn.va{background:linear-gradient(180deg,#4cc06d,#2c8a4a)}
+.votebtn.vb{background:linear-gradient(180deg,var(--red),var(--red-dark))}
+.votebtn.vn{background:linear-gradient(180deg,#3562b8,#22407e)}
+.gauge{
+  position:relative; width:100%; height:36px; border-radius:10px;
+  border:3px solid var(--outline); overflow:hidden;
+  background:linear-gradient(180deg,var(--red),var(--red-dark));
+  box-shadow:0 4px 0 rgba(0,0,0,.3);
+}
+.gauge.neutral{background:linear-gradient(180deg,#3562b8,#22407e)}
+.gfill{
+  position:absolute; inset:0 auto 0 0; width:0;
+  background:linear-gradient(180deg,#4cc06d,#2c8a4a);
+  border-right:3px solid var(--outline);
+  transition:width .9s cubic-bezier(.2,1.2,.4,1);
+}
+.gauge.neutral .gfill{background:linear-gradient(180deg,var(--gold),#c98d1d)}
+.glab{
+  position:absolute; top:50%; transform:translateY(-50%);
+  font-size:18px; font-weight:700; color:#fff; letter-spacing:1px;
+  text-shadow:0 2px 0 rgba(0,0,0,.5); pointer-events:none; white-space:nowrap;
+}
+.gl-a{left:10px} .gl-b{right:10px}
+.gcount{font-size:16px; color:#8a7c68; margin-top:5px; letter-spacing:1px}
+
 /* ---------- JOKER ---------- */
 .jokerzone{margin-top:26px; display:flex; flex-direction:column; align-items:center; gap:14px; width:min(620px,100%)}
 .joker-btn{
@@ -407,6 +441,7 @@ footer{position:fixed; bottom:8px; z-index:2; font-size:12px; color:#7d8bb8; let
 @media (max-width:520px){
   .go{font-size:24px; padding:10px 34px}
   .q p{font-size:16px}
+  .votebtn{font-size:18px; padding:5px 20px 7px}
 }
 </style>
 
@@ -456,7 +491,7 @@ function track(ev, props){ try{ posthog.capture(ev, props); }catch(e){} }
   <section class="arena" id="arena"></section>
 </main>
 
-<footer>CHAUDEN v1.1 — inspiré de la chaudenliste</footer>
+<footer>CHAUDEN v1.2 — inspiré de la chaudenliste</footer>
 
 <script>
 /* ================== CONFIG ================== */
@@ -477,6 +512,16 @@ const JT = {
   fact:   {label:'FUN FACT',          color:'#f5b93b'},
   malaise:{label:'TRUC DÉRANGEANT',   color:'#f5484f'},
   unpop:  {label:'UNPOPULAR OPINION', color:'#2fa3f3'},
+};
+
+/* types de question 1 : on = oui/non (défaut), vf = vrai/faux,
+   gd = gauche/droite, 12 = tu préfères 1/2 (numéros dans la question)
+   → ajoute q1t:"vf" / "gd" / "12" sur un sujet pour changer ses boutons */
+const Q1T = {
+  on:  {tag:'OUI / NON',       a:'OUI',    b:'NON',    neutral:false},
+  vf:  {tag:'VRAI / FAUX',     a:'VRAI',   b:'FAUX',   neutral:false},
+  gd:  {tag:'GAUCHE / DROITE', a:'GAUCHE', b:'DROITE', neutral:true},
+  '12':{tag:'TU PRÉFÈRES',     a:'1',      b:'2',      neutral:true},
 };
 
 const TOPICS = {
@@ -803,6 +848,9 @@ function reveal(lvl){
   track('sujet_tire', {niveau: lvl, sujet: t.t});
   jokerPool = [...t.j].sort(()=>Math.random()-.5);
   const s = STAKES[lvl-1];
+  const qt = Q1T[t.q1t] || Q1T.on;
+  const clsA = qt.neutral ? 'vn' : 'va';
+  const clsB = qt.neutral ? 'vn' : 'vb';
 
   arena.innerHTML = `
     <div class="topic">
@@ -813,7 +861,12 @@ function reveal(lvl){
     <div class="hand">
       <div class="q">
         <div class="num">1</div>
-        <div class="body"><span class="tag">OUI / NON</span><p>${esc(t.q1)}</p></div>
+        <div class="body"><span class="tag">${qt.tag}</span><p>${esc(t.q1)}</p>
+          <div class="voterow" id="voteRow">
+            <button class="votebtn ${clsA}" onclick="voteQ1('a')">${qt.a}</button>
+            <button class="votebtn ${clsB}" onclick="voteQ1('b')">${qt.b}</button>
+          </div>
+        </div>
       </div>
       <div class="q">
         <div class="num">2</div>
@@ -832,6 +885,38 @@ function reveal(lvl){
     </div>`;
 
   $('#jokerBtn').addEventListener('click', playJoker);
+}
+
+/* ================== VOTE Q1 ================== */
+async function voteQ1(choice){
+  const row = document.getElementById('voteRow');
+  const qt = Q1T[currentTopic.q1t] || Q1T.on;
+  const label = choice === 'a' ? qt.a : qt.b;
+  row.innerHTML = '<span class="gcount">Vote en cours…</span>';
+  track('vote_q1', {sujet: currentTopic.t, choix: label, type_question: qt.tag});
+
+  try{
+    const r = await fetch(PROPOSE_ENDPOINT + '/vote', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({topic: currentTopic.t, choice: choice})
+    });
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const v = await r.json();
+    const total = v.a + v.b;
+    const pA = Math.round(100 * v.a / total);
+    row.innerHTML = `
+      <div class="gauge ${qt.neutral ? 'neutral' : ''}"><div class="gfill"></div>
+        <span class="glab gl-a">${qt.a} ${pA}%</span>
+        <span class="glab gl-b">${100-pA}% ${qt.b}</span>
+      </div>
+      <div class="gcount">${total} vote${total>1?'s':''} au total — toi : ${label}</div>`;
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{ row.querySelector('.gfill').style.width = pA + '%'; });
+    });
+  }catch(err){
+    row.innerHTML = '<span class="gcount">❌ Vote non enregistré, réessaie plus tard.</span>';
+  }
 }
 
 function playJoker(){
