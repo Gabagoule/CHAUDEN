@@ -926,6 +926,23 @@ function pickTopic(lvl){
 /* ================== AFFICHAGE ================== */
 function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
+  function qBlock(i, text, type){
+  if(!type){
+    return `<div class="q"><div class="num">${i}</div>
+      <div class="body"><span class="tag open">QUESTION OUVERTE</span><p>${esc(text)}</p></div></div>`;
+  }
+  const qt = Q1T[type] || Q1T.on;
+  const clsA = qt.neutral ? 'vn' : 'va';
+  const clsB = qt.neutral ? 'vn' : 'vb';
+  return `<div class="q"><div class="num">${i}</div>
+    <div class="body"><span class="tag">${qt.tag}</span><p>${esc(text)}</p>
+      <div class="voterow" id="voteRow${i}">
+        <button class="votebtn ${clsA}" onclick="voteQ(${i},'a')">${qt.a}</button>
+        <button class="votebtn ${clsB}" onclick="voteQ(${i},'b')">${qt.b}</button>
+      </div>
+    </div></div>`;
+}
+  
 function reveal(lvl){
   const t = pickTopic(lvl);
   currentTopic = t;
@@ -943,15 +960,10 @@ function reveal(lvl){
       <h2>${esc(t.t)}</h2>
     </div>
     <div class="hand">
-      <div class="q">
-        <div class="num">1</div>
-        <div class="body"><span class="tag">${qt.tag}</span><p>${esc(t.q1)}</p>
-          <div class="voterow" id="voteRow">
-            <button class="votebtn ${clsA}" onclick="voteQ1('a')">${qt.a}</button>
-            <button class="votebtn ${clsB}" onclick="voteQ1('b')">${qt.b}</button>
-          </div>
-        </div>
-      </div>
+  ${qBlock(1, t.q1, t.q1t || 'on')}
+  ${qBlock(2, t.q2, t.q2t)}
+  ${qBlock(3, t.q3, t.q3t)}
+</div>
       <div class="q">
         <div class="num">2</div>
         <div class="body"><span class="tag open">QUESTION OUVERTE</span><p>${esc(t.q2)}</p></div>
@@ -972,18 +984,20 @@ function reveal(lvl){
 }
 
 /* ================== VOTE Q1 ================== */
-async function voteQ1(choice){
-  const row = document.getElementById('voteRow');
-  const qt = Q1T[currentTopic.q1t] || Q1T.on;
+async function voteQ(i, choice){
+  const row = document.getElementById('voteRow' + i);
+  const type = i === 1 ? (currentTopic.q1t || 'on') : currentTopic['q' + i + 't'];
+  const qt = Q1T[type] || Q1T.on;
   const label = choice === 'a' ? qt.a : qt.b;
   row.innerHTML = '<span class="gcount">Vote en cours…</span>';
-  track('vote_q1', {sujet: currentTopic.t, choix: label, type_question: qt.tag});
+  track('vote_q1', {sujet: currentTopic.t, question: i, choix: label, type_question: qt.tag});
 
   try{
+    const voteKey = currentTopic.t + (i > 1 ? ' #q' + i : '');
     const r = await fetch(PROPOSE_ENDPOINT + '/vote', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({topic: currentTopic.t, choice: choice})
+      body:JSON.stringify({topic: voteKey, choice: choice})
     });
     if(!r.ok) throw new Error('HTTP ' + r.status);
     const v = await r.json();
