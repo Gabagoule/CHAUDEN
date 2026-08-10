@@ -497,6 +497,11 @@ function track(ev, props){ try{ posthog.capture(ev, props); }catch(e){} }
 /* ================== CONFIG ================== */
 
 const PROPOSE_ENDPOINT = "https://chauden-api.pchassery.workers.dev";
+let DEVICE_ID = localStorage.getItem('chauden_dev');
+if(!DEVICE_ID){
+  DEVICE_ID = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  localStorage.setItem('chauden_dev', DEVICE_ID);
+}
 
 /* ================== DATA ================== */
 const STAKES = [
@@ -989,9 +994,52 @@ function reveal(lvl){
     </div>`;
 
   $('#jokerBtn').addEventListener('click', playJoker);
+  checkVoted(1);
+  checkVoted(2);
+  checkVoted(3);
 }
 
-/* ================== VOTE Q1 ================== */
+  
+  /* ================== Verif de l'appareil ================== */
+  async function checkVoted(i){
+  const type = i === 1 ? (currentTopic.q1t || 'on') : currentTopic['q' + i + 't'];
+  if(i > 1 && !type) return; /* question ouverte : rien à vérifier */
+  const qt = Q1T[type] || Q1T.on;
+  try{
+    const voteKey = currentTopic.t + (i > 1 ? ' #q' + i : '');
+    const r = await fetch(PROPOSE_ENDPOINT + '/vote', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({topic: voteKey, device: DEVICE_ID, check: true})
+    });
+    if(!r.ok) return;
+    const v = await r.json();
+    if(v.already) renderGauge(i, v, qt, null);
+  }catch(err){ /* silencieux : au pire les boutons restent */ }
+}
+
+  /* ================== Affiche jauge si deja voté ================== */
+  function renderGauge(i, v, qt, youLabel){
+  const row = document.getElementById('voteRow' + i);
+  if(!row) return;
+  const total = v.a + v.b;
+  if(!total){ return; } /* aucun vote encore : on garde les boutons */
+  const pA = Math.round(100 * v.a / total);
+  const line = youLabel
+    ? `${total} vote${total>1?'s':''} au total — toi : ${youLabel}`
+    : `${total} vote${total>1?'s':''} — tu as déjà voté sur ce sujet 😏`;
+  row.innerHTML = `
+    <div class="gauge ${qt.neutral ? 'neutral' : ''}"><div class="gfill"></div>
+      <span class="glab gl-a">${qt.a} ${pA}%</span>
+      <span class="glab gl-b">${100-pA}% ${qt.b}</span>
+    </div>
+    <div class="gcount">${line}</div>`;
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{ row.querySelector('.gfill').style.width = pA + '%'; });
+  });
+}
+  /* ================== système de vote ================== */
+  
 async function voteQ(i, choice){
   const row = document.getElementById('voteRow' + i);
   const type = i === 1 ? (currentTopic.q1t || 'on') : currentTopic['q' + i + 't'];
@@ -999,27 +1047,16 @@ async function voteQ(i, choice){
   const label = choice === 'a' ? qt.a : qt.b;
   row.innerHTML = '<span class="gcount">Vote en cours…</span>';
   track('vote_q1', {sujet: currentTopic.t, question: i, choix: label, type_question: qt.tag});
-
   try{
     const voteKey = currentTopic.t + (i > 1 ? ' #q' + i : '');
     const r = await fetch(PROPOSE_ENDPOINT + '/vote', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({topic: voteKey, choice: choice})
+      body:JSON.stringify({topic: voteKey, choice: choice, device: DEVICE_ID})
     });
     if(!r.ok) throw new Error('HTTP ' + r.status);
     const v = await r.json();
-    const total = v.a + v.b;
-    const pA = Math.round(100 * v.a / total);
-    row.innerHTML = `
-      <div class="gauge ${qt.neutral ? 'neutral' : ''}"><div class="gfill"></div>
-        <span class="glab gl-a">${qt.a} ${pA}%</span>
-        <span class="glab gl-b">${100-pA}% ${qt.b}</span>
-      </div>
-      <div class="gcount">${total} vote${total>1?'s':''} au total — toi : ${label}</div>`;
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{ row.querySelector('.gfill').style.width = pA + '%'; });
-    });
+    renderGauge(i, v, qt, v.already ? null : label);
   }catch(err){
     row.innerHTML = '<span class="gcount">❌ Vote non enregistré, réessaie plus tard.</span>';
   }
