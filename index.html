@@ -255,7 +255,8 @@ button{font-family:inherit; cursor:pointer}
 }
 .topic .kicker{font-size:14px; letter-spacing:3px; color:#a3937c; margin-bottom:4px}
 .topic h2{font-size:clamp(24px,5vw,34px); font-weight:700; line-height:1.15}
-
+.tred{color:var(--red)}
+.tgold{color:#c98d1d}
 /* ---------- QUESTIONS ---------- */
 .hand{width:min(620px,100%); display:flex; flex-direction:column; gap:14px; margin-top:20px}
 .q{
@@ -836,7 +837,7 @@ j:[
   {k:'unpop', x:"L'humanité a d'autres problèmes que des histoires de woke."},
  ]},
 
-{t:"Les potes racistes par Charlie le déconstruit",
+{t:"Les potes racistes par ^Charlie le déconstruit^",
  q1:"Faut-il rester ami avec ses potes racistes ?",
  q2:"C'est quoi le seuil acceptable de racisme ? (exemple : ton pote mesure les crânes)",
  q3:"Et avec la famille alors. Commence par ton cousin tu sais lui là. Finis par tes parents.",
@@ -977,6 +978,13 @@ function pickTopic(lvl){
 
 /* ================== AFFICHAGE ================== */
 function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+/* ~texte~ = rouge, ^texte^ = or */
+function fmt(s){
+  return esc(s)
+    .replace(/~([^~]+)~/g, '<span class="tred">$1</span>')
+    .replace(/\^([^^]+)\^/g, '<span class="tgold">$1</span>');
+}
 
   function qBlock(i, text, type){
   if(!type){
