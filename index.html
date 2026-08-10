@@ -434,7 +434,7 @@ button{font-family:inherit; cursor:pointer}
 /* couleurs de niveau */
 .c1{background:#67b46f}.c2{background:#3fae6a}.c3{background:var(--gold)}.c4{background:#f07f2e}.c5{background:var(--red)}
 
-footer{position:fixed; bottom:8px; z-index:2; font-size:12px; color:#7d8bb8; letter-spacing:1px; text-shadow:0 2px 0 rgba(0,0,0,.5)}
+footer{position:static; bottom:9px; z-index:2; font-size:12px; color:#7d8bb8; letter-spacing:1px; text-shadow:0 2px 0 rgba(0,0,0,.5)}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001s !important; animation-delay:0s !important; transition:none !important}
 }
@@ -1020,7 +1020,7 @@ function playJoker(){
   zone.appendChild(card);
 }
 
-/* ================== FORMULAIRE DE PROPOSITION ================== */
+/* ================== FORMULAIRE PROPOSITION ================== */
 proposeBtn.addEventListener('click', openProposeForm);
 
 function openProposeForm(){
