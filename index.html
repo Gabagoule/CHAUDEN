@@ -837,12 +837,12 @@ j:[
   {k:'unpop', x:"L'humanité a d'autres problèmes que des histoires de woke."},
  ]},
 
-{t:"Les potes racistes par ~Charlie le déconstruit~",
+{t:"Les potes racistes par ^Charlie le déconstruit^",
  q1:"Faut-il rester ami avec ses potes racistes ?",
  q2:"C'est quoi le seuil acceptable de racisme ? (exemple : ton pote mesure les crânes)",
  q3:"Et avec la famille alors. Commence par ton cousin tu sais lui là. Finis par tes parents.",
  j:[
-  {k:'malaise', x:"La grand mère qui commence un laïus par «Non mais tu temps des colonies (...)»."},
+  {k:'malaise', x:"La grand mère qui commence un laïus par «Non mais du temps des colonies (...)»."},
   {k:'unpop', x:"Aimer le temps des colonies de Michel Sardou."},
  ]},
 
@@ -1009,15 +1009,13 @@ function reveal(lvl){
   track('sujet_tire', {niveau: lvl, sujet: t.t});
   jokerPool = [...t.j].sort(()=>Math.random()-.5);
   const s = STAKES[lvl-1];
-  const qt = Q1T[t.q1t] || Q1T.on;
-  const clsA = qt.neutral ? 'vn' : 'va';
-  const clsB = qt.neutral ? 'vn' : 'vb';
+ 
 
   arena.innerHTML = `
     <div class="topic">
       <div class="lvl-chip ${s.cls}">${lvl}</div>
       <div class="kicker">SUJET — ${s.name}</div>
-      <h2>${esc(t.t)}</h2>
+      <h2>${fmt(t.t)}</h2>
     </div>
     <div class="hand">
   ${qBlock(1, t.q1, t.q1t || 'on')}
