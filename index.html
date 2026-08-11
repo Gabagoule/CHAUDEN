@@ -991,13 +991,13 @@ function fmt(s){
   function qBlock(i, text, type){
   if(!type){
     return `<div class="q"><div class="num">${i}</div>
-      <div class="body"><span class="tag open">QUESTION OUVERTE</span><p>${esc(text)}</p></div></div>`;
+      <div class="body"><span class="tag open">QUESTION OUVERTE</span><p>${fmt(text)}</p></div></div>`;
   }
   const qt = Q1T[type] || Q1T.on;
   const clsA = qt.neutral ? 'vn' : 'va';
   const clsB = qt.neutral ? 'vn' : 'vb';
   return `<div class="q"><div class="num">${i}</div>
-    <div class="body"><span class="tag">${qt.tag}</span><p>${esc(text)}</p>
+    <div class="body"><span class="tag">${qt.tag}</span><p>${fmt(text)}</p>
       <div class="voterow" id="voteRow${i}">
         <button class="votebtn ${clsA}" onclick="voteQ(${i},'a')">${qt.a}</button>
         <button class="votebtn ${clsB}" onclick="voteQ(${i},'b')">${qt.b}</button>
