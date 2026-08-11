@@ -257,6 +257,7 @@ button{font-family:inherit; cursor:pointer}
 .topic h2{font-size:clamp(24px,5vw,34px); font-weight:700; line-height:1.15}
 .tred{color:var(--red)}
 .tgold{color:#c98d1d}
+.tblue{color:#3562b8}
 /* ---------- QUESTIONS ---------- */
 .hand{width:min(620px,100%); display:flex; flex-direction:column; gap:14px; margin-top:20px}
 .q{
@@ -561,7 +562,7 @@ const TOPICS = {
   ]},
  {t:"Chat vs chien",
   q1t :"12",
-  q1:"Tu dois partir seul sur une ile desert tu prend : 1️⃣Un chat 2️⃣Un chien ?",
+  q1:"Tu dois partir seul sur une ile desert tu prend : 1️⃣^Un chat^ 2️⃣%Un chien% ?",
   q2:"C'est les humains qui ont des chats ou c'est les chats qui ont des humains ?",
   q3:"C'est ok les concours de beauté pour chat ou chien ?",
   j:[
@@ -654,7 +655,7 @@ q1t :"vf",
 {t:"La cryogénisation",
  q1:"Tu te ferais congeler à ta mort si c'était gratuit ?",
  q2t:"12",
- q2:"Tu te réveilles en 2300, tout le monde que tu connais est mort : 1️⃣c'est cool ou 2️⃣pas cool ?",
+ q2:"Tu te réveilles en 2300, tout le monde que tu connais est mort : 1️⃣^c'est cool^ ou 2️⃣%pas cool% ?",
  q3:"Ils vont vraiment les décongeler un jour ?",
  j:[
   {k:'fact', x:"Environ 500 personnes sont actuellement cryogénisées dans le monde, tête en bas dans de l'azote liquide."},
@@ -696,7 +697,7 @@ j:[
 
 {t:"La coloc",
 q1t:"12",
-q1:"Ta bouffe dans le frigo, c'est 1️⃣un patrimoine commun ou 2️⃣ton territoire ?",
+q1:"Ta bouffe dans le frigo, c'est 1️⃣^un patrimoine commun^ ou 2️⃣%ton territoire% ?",
 q2:"Vider le frigo « pour faire le ménage », c'est un service ou un crime de guerre ?",
 q3:"Un coloc qui mange la bouffe des autres sans rien dire : erreur de jugement ou manque de respect assumé ?",
 j:[
@@ -742,7 +743,7 @@ j:[
   ]},
  {t:"Le vote obligatoire",
   q1t:"12",
-  q1:"Qu'est ce qui a le plus d'impact : 1️⃣le vote blanc ou 2️⃣l'abstention ?",
+  q1:"Qu'est ce qui a le plus d'impact : 1️⃣^le vote blanc^ ou 2️⃣%l'abstention% ?",
   q2:"135€ d'amende pour les abstentionnistes ?",
   q3:"C'est ok de reserver le vote à une elite intellectuelle ?",
   j:[
@@ -983,7 +984,8 @@ function esc(s){ const d = document.createElement('div'); d.textContent = s; ret
 function fmt(s){
   return esc(s)
     .replace(/~([^~]+)~/g, '<span class="tred">$1</span>')
-    .replace(/\^([^^]+)\^/g, '<span class="tgold">$1</span>');
+    .replace(/\^([^^]+)\^/g, '<span class="tgold">$1</span>')
+    .replace(/%([^%]+)%/g, '<span class="tblue">$1</span>');
 }
 
   function qBlock(i, text, type){
